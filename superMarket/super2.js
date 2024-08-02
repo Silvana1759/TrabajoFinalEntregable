@@ -1,7 +1,8 @@
 "use strict"
+
 let contenedor = document.getElementById("contenedor");
 let lista = document.getElementById("lista");
-let btnTotal = document.getElementById("btnTotal");
+
 let cantidadTotal = document.getElementById("cantidadTotal");
 const productos =["Pan", "Shampoo", "Lavandina", "Carne", "Jugo", "Cerveza", "Aceite", "Helado", "Verdura", "Huevos", "Azucar", "Fernet"];
 const precios = [1700, 4200, 3500, 4500, 2500, 920, 2000, 3500, 1500, 4500, 3200, 2300];
@@ -13,8 +14,9 @@ function pintarProductos(arrayProductos, arrayPrecios, arrayStock) {
             let li = document.createElement("li");
             li.dataset.producto = arrayProductos[i];
             let texto = document.createTextNode(`Producto:  ${arrayProductos[i]} - Precio:$   ${arrayPrecios[i]} - Stock: ${arrayStock[i]}`);
-         
-        
+            let imag = document.createElement("img");
+        imag.src = arrayImagenes[i];
+        imag.alt = `Imagen de ${arrayProductos[i]}`;
 
         let input=document.createElement("input");
         input.type="number";
@@ -31,7 +33,7 @@ function pintarProductos(arrayProductos, arrayPrecios, arrayStock) {
         boton.onclick=function(){
             calcularPrecioTotal(input,precioTotal);
         };
-      
+        li.appendChild(imag);
         li.appendChild(texto);
         li.appendChild(input);
         li.appendChild(boton);

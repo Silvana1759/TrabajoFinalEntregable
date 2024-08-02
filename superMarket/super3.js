@@ -17,7 +17,7 @@ btnEnviar.addEventListener("click", (e) => {
     informacion[2] = dni.value;
     informacion[3] = telefono.value;
     informacion[4] = comentarios.value;
-console.log(`su nombre es: ${informacion[0]}`);
+console.log(`Su nombre es: ${informacion[0]}`);
 let blob = new Blob([informacion],{type: "text/plain;charset=utf-8"});
 saveAs(blob,"contacto.txt");
 
