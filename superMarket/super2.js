@@ -5,22 +5,23 @@ let btnTotal = document.getElementById("btnTotal");
 let cantidadTotal = document.getElementById("cantidadTotal");
 const productos =["Pan", "Shampoo", "Lavandina", "Carne", "Jugo", "Cerveza", "Aceite", "Helado", "Verdura", "Huevos", "Azucar", "Fernet"];
 const precios = [1700, 4200, 3500, 4500, 2500, 920, 2000, 3500, 1500, 4500, 3200, 2300];
-const imagenes = ["./PAN.jpg", "./shampoo.jpg","./lavandina.jpg", "./carne.jpg", "jugo.jpg", "./cerveza.jpg", "./aceite.jpg", "./helado.jpg", "./VERDURAS.jpg", "./huevos.jpg","./azucar.jpg", "FERNET.jpg"];
 
+const stock = [12, 10, 8, 5, 3, 22, 10, 3, 15, 6, 10, 23];
 
-function pintarProductos(arrayProductos, arrayPrecios, arrayImagenes) {
+function pintarProductos(arrayProductos, arrayPrecios, arrayStock) {
         for(let i=0; i< arrayPrecios.length; i++) {
             let li = document.createElement("li");
-            let texto = document.createTextNode(`Producto:  ${arrayProductos[i]} - Precio:$   ${arrayPrecios[i]}`);
-            let imag= document.createElement("img");
-        imag.src=arrayImagenes[i];
-        imag.alt=`Imagen de ${arrayProductos[i]}`;
+            li.dataset.producto = arrayProductos[i];
+            let texto = document.createTextNode(`Producto:  ${arrayProductos[i]} - Precio:$   ${arrayPrecios[i]} - Stock: ${arrayStock[i]}`);
+         
+        
 
         let input=document.createElement("input");
         input.type="number";
         input.min="0";
         input.value="0";
         input.dataset.precio = arrayPrecios[i];
+        input.dataset.stock = arrayStock[i];
 
         let precioTotal=document.createElement("span");
         precioTotal.textContent= "- Total: $ 0";
@@ -30,7 +31,7 @@ function pintarProductos(arrayProductos, arrayPrecios, arrayImagenes) {
         boton.onclick=function(){
             calcularPrecioTotal(input,precioTotal);
         };
-        li.appendChild(imag);
+      
         li.appendChild(texto);
         li.appendChild(input);
         li.appendChild(boton);
@@ -40,19 +41,28 @@ function pintarProductos(arrayProductos, arrayPrecios, arrayImagenes) {
         }
 }
 
-pintarProductos(productos,precios);
-pintarProductos(productos,precios,imagenes);
+
+pintarProductos(productos, precios, stock);
 
 function calcularPrecioTotal(input,precioTotal){
     let cantidad=parseInt(input.value) || 0;
     let precioUnitario=parseInt(input.dataset.precio) || 0;
-    if(cantidad<0){
-        alert("la cantidad no puede ser negativa.");
-        input.value="0";
+    let stockDisponible = parseInt(input.dataset.stock)  || 0;
+    if(cantidad < 0){
+        alert("La cantidad no puede ser menor a 0");
+        input.value = "0";
+        return;
+    }
+    if (cantidad > stockDisponible){
+        alert(`La cantidad (${cantidad}) es mayor al stock disponible (${stockDisponible}).`);
+        input.value = "0";
         return;
     }
     let totalProducto = cantidad * precioUnitario;
-    precioTotal.textContent=` - Total: $${totalProducto}`;
+    precioTotal.textContent=` - Total: $ ${totalProducto}`;
+    input.dataset.stock = stockDisponible - cantidad;
+    let textoProducto = input.parentElement.childNodes[1];
+    textoProducto.textContent =(`Producto:  ${input.parentElement.dataset.producto} - Precio:$  ${precioUnitario} - Stock: ${input.dataset.stock}`); 
     calcularTotal();
 }
 
@@ -62,10 +72,10 @@ function calcularTotal(){
     inputs.forEach(input => {
         let cantidad = parseInt(input.value) || 0;
         let precioUnitario = parseInt(input.dataset.precio) || 0;
-        total +=cantidad * precioUnitario;
+        total += cantidad * precioUnitario;
     });
 
-     totalCantidad.textContent=`Total a pagar: $${total}`;
+     cantidadTotal.textContent=`Total a pagar:$ ${total}`;
 }
-btnTotal.addEventListener("click", calcularTotal);
-/*}function pintarProductos(arrayProductos, arrayPrecios) {*/
+
+
